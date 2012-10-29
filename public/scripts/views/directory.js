@@ -1,23 +1,19 @@
-define(['views/contact'], function(ContactView){
+define(['views/contact', 'models/contact'], function(ContactView, Contact){
     var View = Backbone.View.extend({
         //el: $("#contacts"),
-        template: _.template($("#directoryTemplate").html()),
 
         initialize: function () {
-            //this.collection = new Directory(contacts);
-            this.contacts = this.collection.models;
-            this.$el.html(this.template(this.createSelect()));
             this.render();
-            this.$el.find("#filter").append(this.createSelect()); 
+            this.contacts = this.collection.models;
+            this.$el.find("#filter").append(this.createSelect());
 
             this.on("change:filterType", this.filterByType, this);
             this.collection.on("reset", this.render, this);
             this.collection.on("add", this.renderContact, this);
-            this.collection.on("remove", this.renderContact, this);
+            this.collection.on("remove", this.removeContact, this);
         },
 
         render: function () {
-            
             this.$el.find("article").remove();
 
             _.each(this.collection.models, function (item) {
@@ -31,23 +27,25 @@ define(['views/contact'], function(ContactView){
                 collection: this.collection,
                 router: this.options.router
             });
-            el = this.$el;
-            $("#contacts", el).append(contactView.render().el);
+            this.$el.append(contactView.render().el);
         },
 
         getTypes: function () {
-            return _.uniq(this.collection.pluck("type"));
+            return _.uniq(this.collection.pluck("type"), false, function (type) {
+                return type.toLowerCase();
+            });
         },
 
         createSelect: function () {
-            var select = $("<select/>", {
+            var filter = this.$el.find("#filter"),
+                select = $("<select/>", {
                     html: "<option value='all'>All</option>"
                 });
 
             _.each(this.getTypes(), function (item) {
                 var option = $("<option/>", {
-                    value: item,
-                    text: item
+                    value: item.toLowerCase(),
+                    text: item.toLowerCase()
                 }).appendTo(select);
             });
 
@@ -57,7 +55,8 @@ define(['views/contact'], function(ContactView){
         //add ui events
         events: {
             "change #filter select": "setFilter",
-            "click #addBtn" : "addContact",
+            "click #add": "addContact",
+            "click #showForm": "showForm"
         },
 
         //Set filter property and fire change event
@@ -70,13 +69,13 @@ define(['views/contact'], function(ContactView){
         filterByType: function () {
             if (this.filterType === "all") {
                 this.collection.reset(this.contacts);
-                this.options.router.navigate("filter/all");
+                contactsRouter.navigate("filter/all");
             } else {
                 this.collection.reset(this.contacts, { silent: true });
 
                 var filterType = this.filterType,
                     filtered = _.filter(this.collection.models, function (item) {
-                        return item.get("type") === filterType;
+                        return item.get("type").toLowerCase() === filterType;
                     });
 
                 this.collection.reset(filtered);
@@ -84,10 +83,49 @@ define(['views/contact'], function(ContactView){
                 this.options.router.navigate("filter/" + filterType);
             }
         },
-        addContact: function() {
-            this.options.router.navigate("addContact",{trigger: true});
+
+        showForm: function () {
+            this.$el.find("#addContact").slideToggle();
+        },
+        addContact: function (e) {
+            e.preventDefault();
+
+            var formData = {};
+            $("#addContact").children("input").each(function (i, el) {
+                if ($(el).val() !== "") {
+                    formData[el.id] = $(el).val();
+                }
+            });
+
+            //update data store
+
+            this.contacts.push(new Contact.Model(formData));
+            //re-render select if new type is unknown
+            
+            if (_.indexOf(this.getTypes(), formData.type) === -1) {
+                this.collection.add(new Contact.Model(formData));
+                this.$el.find("#filter").find("select").remove().end().append(this.createSelect());
+            } else {
+                this.collection.add(new Contact.Model(formData));
+            }
+        },
+        removeContact: function (removedModel) {
+            var removed = removedModel.attributes;
+
+            //if model acquired default photo property, remove it
+            if (removed.photo === "/img/placeholder.png") {
+                delete removed.photo;
+            }
+
+            //remove from contacts array
+            contacts = this.contacts;
+            _.each(contacts, function (contact) {
+                if (_.isEqual(contact, removed)) {
+                    contacts.splice(_.indexOf(contacts, contact), 1);
+                }
+            });
+            this.contacts = contacts;
         }
-        
     });
     return View;
 })

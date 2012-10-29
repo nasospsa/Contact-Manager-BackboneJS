@@ -5,16 +5,22 @@
         <link rel="stylesheet" href="css/screen.css" />
     </head>
     <body>
-        <div id="app">
-        </div>
-        <script id="directoryTemplate" type="text/template">
+        <div id="contacts">
             <header>
                 <div id="filter"><label>Show me:</label></div>
-                <a href="#add">Add a contact</a>
+                <a id="showForm" href="#">Add new contact</a>
+                <form id="addContact" action="#">
+                    <label for="photo">Photo:</label><input id="photo" type="file" />
+                    <label for="name">Name:</label><input id="name" />
+                    <label for="type">Type:</label><input id="type" />
+                    <label for="address">Address:</label><input id="address" />
+                    <label for="tel">Tel:</label><input id="tel" />
+                    <label for="email">Email:</label><input id="email" />
+                    <button id="add">Add</button>
+                </form>
             </header>
-            <div id="contacts">
-            </div>
-        </script>
+        </div>
+
         <script id="contactTemplate" type="text/template">
             <img src="<%= photo %>" alt="<%= name %>" />
             <h1><%= name %><span><%= type %></span></h1>
@@ -23,23 +29,21 @@
                 <dt>Tel:</dt><dd><%= tel %></dd>
                 <dt>Email:</dt><dd><a href="mailto:<%= email %>"><%= email %></a></dd>
             </dl>
-            <a href="#edit/<%= id %>">Edit</a>
-            <input type="button" name="remove" value="Delete" />
+            <button class="delete">Delete</button>
+            <button class="edit">Edit</button>
         </script>
 
-        <script id="contactAddTemplate" type="text/template">
-        <a href="#">Back</a>
-        <form id="newContact" action="#">
-            <img src="img/placeholder.png" alt="New Contact" />
-            <h1><input required type="text" name="name" placeholder="name" value="<%= contact.name %>" /><span><input required type="text" name="type" placeholder="type" value="<%= contact.type %>" /></span></h1>
-            <div><input required type="text" name="address" placeholder="Address" value="<%= contact.address %>" /></div>
-            <dl>
-                <dt>Tel:</dt><dd><input type="number" name="tel" placeholder="tel" value="<%= contact.tel %>" /></dd>
-                <dt>Email:</dt><dd><input type="email" name="email" required placeholder="email" value="<%= contact.email %>"/></dd>
-            </dl>
-            <input type="hidden" id="identification" value="<%= contact.id %>" />
-            <input type="submit" value="Add Contact" />
-        </form>
+        <script id="contactEditTemplate" type="text/template">
+            <form action="#">
+                <input type="file" value="<%= photo %>" />
+                <input class="name" value="<%= name %>" />
+                <input id="type" type="hidden" value="<%= type %>" />
+                <input class="address" value="<%= address %>" />
+                <input class="tel" value="<%= tel %>" />
+                <input class="email" value="<%= email %>" />
+                <button class="save">Save</button>
+                <button class="cancel">Cancel</button>
+            </form>
         </script>
 
         <script>
