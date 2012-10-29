@@ -1,0 +1,61 @@
+<html>  
+	<head>
+        <meta charset="UTF-8" />
+        <title>Backbone.js Web App</title>
+        <link rel="stylesheet" href="css/screen.css" />
+    </head>
+    <body>
+        <div id="app">
+        </div>
+        <script id="directoryTemplate" type="text/template">
+            <header>
+                <div id="filter"><label>Show me:</label></div>
+                <a href="#add">Add a contact</a>
+            </header>
+            <div id="contacts">
+            </div>
+        </script>
+        <script id="contactTemplate" type="text/template">
+            <img src="<%= photo %>" alt="<%= name %>" />
+            <h1><%= name %><span><%= type %></span></h1>
+            <div><%= address %></div>
+            <dl>
+                <dt>Tel:</dt><dd><%= tel %></dd>
+                <dt>Email:</dt><dd><a href="mailto:<%= email %>"><%= email %></a></dd>
+            </dl>
+            <a href="#edit/<%= id %>">Edit</a>
+            <input type="button" name="remove" value="Delete" />
+        </script>
+
+        <script id="contactAddTemplate" type="text/template">
+        <a href="#">Back</a>
+        <form id="newContact" action="#">
+            <img src="img/placeholder.png" alt="New Contact" />
+            <h1><input required type="text" name="name" placeholder="name" value="<%= contact.name %>" /><span><input required type="text" name="type" placeholder="type" value="<%= contact.type %>" /></span></h1>
+            <div><input required type="text" name="address" placeholder="Address" value="<%= contact.address %>" /></div>
+            <dl>
+                <dt>Tel:</dt><dd><input type="number" name="tel" placeholder="tel" value="<%= contact.tel %>" /></dd>
+                <dt>Email:</dt><dd><input type="email" name="email" required placeholder="email" value="<%= contact.email %>"/></dd>
+            </dl>
+            <input type="hidden" id="identification" value="<%= contact.id %>" />
+            <input type="submit" value="Add Contact" />
+        </form>
+        </script>
+
+        <script>
+            var require = {
+                paths: {
+                    'backbone' : 'libs/backbone-min'
+                },
+                shim:{
+                    'backbone': {
+                        deps: ['libs/jquery-1.7.1.min', 'libs/underscore-min'],
+                        exports: 'Backbone'
+                    }
+                },
+                deps: ['backbone'],
+            };
+        </script>
+        <script data-main="scripts/main.js" src="scripts/libs/require.js"></script>
+    </body>
+</html>
