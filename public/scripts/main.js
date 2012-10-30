@@ -1,3 +1,4 @@
+
 define(['models/contact', 'views/directory'],
     function(Contact, DirectoryView){
 		//add routing

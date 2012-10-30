@@ -1,4 +1,4 @@
-define(['backbone'], function(){
+define([], function(){
 	//define product model
     var Contact = Backbone.Model.extend({
         defaults: {

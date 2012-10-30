@@ -45,21 +45,7 @@
                 <button class="cancel">Cancel</button>
             </form>
         </script>
-
-        <script>
-            var require = {
-                paths: {
-                    'backbone' : 'libs/backbone-min'
-                },
-                shim:{
-                    'backbone': {
-                        deps: ['libs/jquery-1.7.1.min', 'libs/underscore-min'],
-                        exports: 'Backbone'
-                    }
-                },
-                deps: ['backbone'],
-            };
-        </script>
-        <script data-main="scripts/main.js" src="scripts/libs/require.js"></script>
+        <script data-main="scripts/build/main.js" src="scripts/libs/require.js"></script>
+        
     </body>
 </html>

@@ -1,0 +1,10 @@
+
+main.js
+----------------
+libs/jquery-1.7.1.min.js
+libs/underscore-min.js
+libs/backbone-min.js
+models/contact.js
+views/contact.js
+views/directory.js
+main.js

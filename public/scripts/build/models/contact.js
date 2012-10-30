@@ -1,0 +1,1 @@
+define([],function(){var e=Backbone.Model.extend({defaults:{photo:"img/placeholder.png",name:"",address:"",tel:"",email:"",type:""}}),t=Backbone.Collection.extend({model:e});return{Model:e,Collection:t}})

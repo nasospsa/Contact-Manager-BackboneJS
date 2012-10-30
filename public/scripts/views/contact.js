@@ -1,4 +1,4 @@
-define(['backbone'], function(){
+define([], function(){
 	//define individual contact view
     var View = Backbone.View.extend({
         tagName: "article",
