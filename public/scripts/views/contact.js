@@ -26,7 +26,7 @@ define(['backbone'], function(){
                 value: "addType"
             });
 
-            this.select = directory.createSelect().addClass("type").val(this.$el.find("#type").val()).append(newOpt).insertAfter(this.$el.find(".name"));
+            this.select = this.options.directoryView.createSelect().addClass("type").val(this.$el.find("#type").val()).append(newOpt).insertAfter(this.$el.find(".name"));
             this.$el.find("input[type='hidden']").remove();
         },
         addType: function () {
@@ -68,11 +68,14 @@ define(['backbone'], function(){
             }
 
             //update contacts array
-            _.each(contacts, function (contact) {
+            _.each(this.options.directoryView.contacts, function (contact) {
                 if (_.isEqual(contact, prev)) {
-                    contacts.splice(_.indexOf(contacts, contact), 1, formData);
+                    this.options.directoryView.contacts.splice(_.indexOf(contacts, contact), 1, formData);
                 }
             });
+
+            //update select
+            this.options.directoryView.$el.find("#filter").find("select").remove().end().append(this.options.directoryView.createSelect());
         },
 
         cancelEdit: function () {
@@ -88,8 +91,8 @@ define(['backbone'], function(){
             this.remove();
 
             //re-render select if no more of deleted type
-            if (_.indexOf(directory.getTypes(), removedType) === -1) {
-                directory.$el.find("#filter select").children("[value='" + removedType + "']").remove();
+            if (_.indexOf(this.options.directoryView.getTypes(), removedType) === -1) {
+                this.options.directoryView.$el.find("#filter select").children("[value='" + removedType + "']").remove();
             }
         },
     });

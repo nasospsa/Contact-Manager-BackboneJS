@@ -23,11 +23,18 @@ define(['models/contact', 'views/directory'],
     	},
         directory: function() {
             router = this;
-            this.directory = new DirectoryView({el: this.el, collection: this.directoryCollection, router: router});
+            if (this.directoryView !== undefined) {
+                this.directoryView.remove();
+            }
+            this.directoryView = new DirectoryView({el: this.el, collection: this.directoryCollection, router: router});
         },
         urlFilter: function (type) {
-            this.directory.filterType = type;
-            this.directory.trigger("change:filterType");
+            if (this.directoryView !== undefined) {
+                this.directoryView.filterType = type;
+                this.directoryView.trigger("change:filterType");
+            } else {
+                this.navigate('',{trigger: true});
+            }
         }
     });
 

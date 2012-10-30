@@ -8,15 +8,15 @@
         <div id="contacts">
             <header>
                 <div id="filter"><label>Show me:</label></div>
-                <a id="showForm" href="#">Add new contact</a>
+                <button id="showForm">Add new contact</button>
                 <form id="addContact" action="#">
                     <label for="photo">Photo:</label><input id="photo" type="file" />
-                    <label for="name">Name:</label><input id="name" />
-                    <label for="type">Type:</label><input id="type" />
+                    <label for="name">Name:</label><input required id="name" />
+                    <label for="type">Type:</label><input required id="type" />
                     <label for="address">Address:</label><input id="address" />
-                    <label for="tel">Tel:</label><input id="tel" />
-                    <label for="email">Email:</label><input id="email" />
-                    <button id="add">Add</button>
+                    <label for="tel">Tel:</label><input type="number" id="tel" />
+                    <label for="email">Email:</label><input required type="email" id="email" />
+                    <button id="add" type="submit">Add</button>
                 </form>
             </header>
         </div>

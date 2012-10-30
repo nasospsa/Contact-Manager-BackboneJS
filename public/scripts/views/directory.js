@@ -4,7 +4,7 @@ define(['views/contact', 'models/contact'], function(ContactView, Contact){
 
         initialize: function () {
             this.render();
-            this.contacts = this.collection.models;
+            this.contacts = this.collection.initial();
             this.$el.find("#filter").append(this.createSelect());
 
             this.on("change:filterType", this.filterByType, this);
@@ -16,7 +16,7 @@ define(['views/contact', 'models/contact'], function(ContactView, Contact){
         render: function () {
             this.$el.find("article").remove();
 
-            _.each(this.collection.models, function (item) {
+            this.collection.each(function (item) {
                 this.renderContact(item);
             }, this);
         },
@@ -25,7 +25,8 @@ define(['views/contact', 'models/contact'], function(ContactView, Contact){
             var contactView = new ContactView({
                 model: item,
                 collection: this.collection,
-                router: this.options.router
+                router: this.options.router,
+                directoryView: this
             });
             this.$el.append(contactView.render().el);
         },
@@ -55,7 +56,7 @@ define(['views/contact', 'models/contact'], function(ContactView, Contact){
         //add ui events
         events: {
             "change #filter select": "setFilter",
-            "click #add": "addContact",
+            "submit #addContact": "addContact",
             "click #showForm": "showForm"
         },
 
@@ -69,12 +70,10 @@ define(['views/contact', 'models/contact'], function(ContactView, Contact){
         filterByType: function () {
             if (this.filterType === "all") {
                 this.collection.reset(this.contacts);
-                contactsRouter.navigate("filter/all");
+                this.options.router.navigate("filter/all");
             } else {
-                this.collection.reset(this.contacts, { silent: true });
-
                 var filterType = this.filterType,
-                    filtered = _.filter(this.collection.models, function (item) {
+                    filtered = _.filter(this.contacts, function (item) {
                         return item.get("type").toLowerCase() === filterType;
                     });
 
@@ -91,14 +90,15 @@ define(['views/contact', 'models/contact'], function(ContactView, Contact){
             e.preventDefault();
 
             var formData = {};
-            $("#addContact").children("input").each(function (i, el) {
+            $("#addContact", this.$el).children("input").each(function (i, el) {
                 if ($(el).val() !== "") {
                     formData[el.id] = $(el).val();
+                    $(el).val('');
                 }
             });
+            this.$el.find("#addContact").slideToggle();
 
             //update data store
-
             this.contacts.push(new Contact.Model(formData));
             //re-render select if new type is unknown
             
